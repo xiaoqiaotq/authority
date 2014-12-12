@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd 
+          http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+          
+          
+    <description>
+        This is the main Spring configuration file with some of the main "core" classes defined. You shouldn't really
+        modify this unless you
+        know what you're doing!
+    </description>
+    <context:component-scan base-package="org.xiaoqiaotq">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+
+    <!-- 数据源配置, 使用DBCP数据库连接池 -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <!-- Connection Info -->
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+
+        <!-- Connection Pooling Info -->
+        <property name="maxActive" value="${dbcp.maxActive}"/>
+        <property name="maxIdle" value="${dbcp.maxIdle}"/>
+        <property name="defaultAutoCommit" value="true"/>
+        <!-- 连接Idle一个小时后超时 -->
+        <property name="timeBetweenEvictionRunsMillis" value="3600000"/>
+        <property name="minEvictableIdleTimeMillis" value="3600000"/>
+    </bean>
+
+    <!-- JPA实体管理工厂的配置 -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter"/>
+        <property name="packagesToScan" value="org.xiaoqiaotq.domain"/>
+        <!--待扫描的实体类包，不再需要persistence.xml了-->
+        <property name="jpaProperties">
+            <props>
+
+                <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+    </bean>
+    <!--指定实现JPA的适配器-->
+    <bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect"/>
+    </bean>
+
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+
+    <!-- Jpa 事务配置 -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <!-- 使用annotation定义事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+    <bean id="searchProcessor" class="com.googlecode.genericdao.search.jpa.JPASearchProcessor">
+        <constructor-arg ref="metadataUtil"/>
+    </bean>
+
+    <bean id="metadataUtil"
+          class="com.googlecode.genericdao.search.jpa.hibernate.HibernateMetadataUtil"
+          factory-method="getInstanceForEntityManagerFactory">
+        <constructor-arg ref="entityManagerFactory"/>
+    </bean>
+
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <task:annotation-driven executor="executor" scheduler="scheduler"/>
+    <task:executor id="executor" pool-size="5"/>
+    <!--<bean id="syncEmailJob" class=" com.sixks.app.service.api.SyncEmailJob">-->
+    <task:scheduler id="scheduler" pool-size="5"/>
+
+    <bean id="taskExecutor"
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="2"/>
+        <property name="maxPoolSize" value="5"/>
+        <property name="queueCapacity" value="6"/>
+        <property name="keepAliveSeconds" value="2000"/>
+        <property name="rejectedExecutionHandler">
+            <bean class="java.util.concurrent.ThreadPoolExecutor$AbortPolicy"/>
+        </property>
+    </bean>
+
+</beans>
