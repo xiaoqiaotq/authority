@@ -29,6 +29,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
  */
 // @XmlRootElement(name="xmdls")
 @Entity
+@Table(name="t_user")
 public class User {
 	@GeneratedValue
 	@Id
@@ -39,7 +40,9 @@ public class User {
 	private int age;
 
 	@ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-	@JoinTable(name = "t_role_user", joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") }, inverseJoinColumns = { @JoinColumn(name = "role_id", referencedColumnName = "id") })
+	@JoinTable(name = "t_user_role", 
+			joinColumns = { @JoinColumn(name = "user_id")}, 
+			inverseJoinColumns = { @JoinColumn(name = "role_id")})
 	private Set<Role> roles;
 
 	public Set<Role> getRoles() {

@@ -1,36 +1,30 @@
 package org.xiaoqiaotq.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import java.util.Set;
 
-/**
- * @author xiaoqiaotq@gmail.com	
- * @date   2014年12月12日
- */
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
 @Entity
-public class Role {
-  @Id
-  @GeneratedValue
-  private Integer id;
-  public Integer getId() {
-	return id;
-}
-public void setId(Integer id) {
-	this.id = id;
-}
-public String getRoleName() {
-	return roleName;
-}
-public void setRoleName(String roleName) {
-	this.roleName = roleName;
-}
-public String getDesc() {
-	return desc;
-}
-public void setDesc(String desc) {
-	this.desc = desc;
-}
-private String roleName;
-  private String desc;
+@Table(name="t_role")
+public class Role extends BaseEntity {
+   private String roleName;
+   private String roleDesc;
+   @ManyToMany(mappedBy="roles")
+   private Set<User> users;
+   
+	public String getRoleName() {
+		return roleName;
+	}
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+	public String getRoleDesc() {
+		return roleDesc;
+	}
+	public void setRoleDesc(String roleDesc) {
+		this.roleDesc = roleDesc;
+	}
+   
 }

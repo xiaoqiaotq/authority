@@ -20,22 +20,22 @@
 			
 			<td align='center'><input type="checkbox" name="checkAll" id="checkAll"></td>
 			<td align='center'>id</td>
-			<td align='center'>username</td>
-			<td align='center'>age</td>
+			<td align='center'>rolename</td>
+			<td align='center'>roleDesc</td>
 			<td align='center'>operation</td>
 		</tr>
-<c:forEach items="${users }" var="user">
+<c:forEach items="${roles }" var="role">
 		<tr >
 			<td align='center'><input type="checkbox" name="check"></td>
-			<td>${user.id }</td>		
-			<td>${user.username }</td>		
-			<td>${user.age }</td>		
+			<td>${role.id }</td>		
+			<td>${role.roleName }</td>		
+			<td>${role.roleDesc }</td>		
 			<td>
-				<a href="<c:url value='/user/show_modify/${user.id}' /> ">modify</a>
+				<a href="<c:url value='/role/show_modify/${role.id}' /> ">modify</a>
 				&nbsp;&nbsp;
-				<a href="<c:url value='/user/del/${user.id}' /> ">del</a>
+				<a href="<c:url value='/role/del/${role.id}' /> ">del</a>
 				&nbsp;&nbsp;
-				<a  href="<c:url value='/user/showRole/${user.id}' />  ">assign role</a>
+				<a target="role" href="<c:url value='http://www.baidu.com' />  ">assign role</a>
 			</td>	
 		</tr>
 </c:forEach>
@@ -45,7 +45,7 @@
 			<td>&nbsp;</td>		
 			<td>&nbsp;</td>		
 			<td>&nbsp;</td>		
-			<td><a href="<c:url value='/user/show_add' />">add</a></td>		
+			<td><a href="<c:url value='/role/show_add' />">add</a></td>		
 		</tr>
 
 	</table>
