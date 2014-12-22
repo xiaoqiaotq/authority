@@ -8,11 +8,13 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="t_role")
-public class Role extends BaseEntity {
+public class Role extends BaseEntity implements Checkable {
    private String roleName;
    private String roleDesc;
    @ManyToMany(mappedBy="roles")
    private Set<User> users;
+   
+   private boolean checked;
    
 	public String getRoleName() {
 		return roleName;
@@ -25,6 +27,14 @@ public class Role extends BaseEntity {
 	}
 	public void setRoleDesc(String roleDesc) {
 		this.roleDesc = roleDesc;
+	}
+	@Override
+	public boolean isChecked() {
+		return this.checked;
+	}
+	@Override
+	public void setChecked(boolean checked) {
+		this.checked=checked;
 	}
    
 }

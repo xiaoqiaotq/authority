@@ -35,7 +35,7 @@
 				&nbsp;&nbsp;
 				<a href="<c:url value='/role/del/${role.id}' /> ">del</a>
 				&nbsp;&nbsp;
-				<a target="role" href="<c:url value='http://www.baidu.com' />  ">assign role</a>
+				<a target="role" href="<c:url value='http://www.baidu.com' />  ">assign authority</a>
 			</td>	
 		</tr>
 </c:forEach>
@@ -51,6 +51,5 @@
 	</table>
 	<hr/>
 	<hr/>
-	<iframe name="role"></iframe>
 </body>
 </html>

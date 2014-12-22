@@ -15,6 +15,7 @@
 </script>
 <body>
 <hr/>
+
 	<table border="1" style="width:100%">
 		<tr>
 			
@@ -49,8 +50,5 @@
 		</tr>
 
 	</table>
-	<hr/>
-	<hr/>
-	<iframe name="role"></iframe>
 </body>
 </html>

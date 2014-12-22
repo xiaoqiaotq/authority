@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.xiaoqiaotq.domain.Role;
 import org.xiaoqiaotq.domain.User;
 import org.xiaoqiaotq.service.RoleService;
@@ -55,17 +54,31 @@ public class UserController {
   }
   @RequestMapping("/showRole/{id}")
   public String showRole(@PathVariable int id,Map map){
+	  User user=userService.find(id);
+	  map.put("user", user);
+	  
 	  List<Role> roles=roleService.findAll();
+	  for (Role role : roles) {
+		 for (Role r : user.getRoles()) {
+			if(r.getId().equals(role.getId())){
+				role.setChecked(true);
+				break;
+			}
+		}
+	  }
 	  map.put("roles", roles);
-	  map.put("userId", id);
-	  return "user/role_list";
+	  return "user/user_role";
   }
   @RequestMapping("/saveRole/{userId}")
-  public String saveRole(@PathVariable int userId,Integer[] check){
-	  Set<Role> roles=roleService.find(check);
+  public String saveRole(@PathVariable int userId, Integer[] roleIds){
 	  User user=userService.find(userId);
-	  user.setRoles(roles);
+	  if (roleIds!=null) {
+		  Set<Role> roles=roleService.find(roleIds);
+		  user.setRoles(roles);
+	  }else{
+		  user.setRoles(null);
+	  }
 	  userService.save(user);
-	  return "redirect:/user/home";
+	  return "redirect:/user/home	";
   }
 }
