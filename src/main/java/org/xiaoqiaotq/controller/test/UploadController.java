@@ -31,15 +31,19 @@ public class UploadController {
 	@ResponseBody
 	public UploadResponse<String> photo(MultipartFile image,String name,MultipartFile apple,HttpServletRequest req) throws IOException{
 		if(!image.isEmpty()){
-//			System.err.println(apple.getName());
+			if(!image.getContentType().contains("image")){
+				return new UploadResponse<String>(500,"请上传图片");
+			}
 			String context=req.getServletContext().getRealPath("/");
 			Calendar calendar=Calendar.getInstance();
 			int year=calendar.get(Calendar.YEAR);
 			int month=calendar.get(Calendar.MONTH)+1;
 			int date=calendar.get(Calendar.DATE);
 			//保存路径
-			String dir2=year+File.separator+month+date;
-			File dir=new File(context,dir2);
+			String dir1=year+"";
+			String dir2=month+""+date;
+			String dir3=dir1+File.separator+dir2;
+			File dir=new File(context,dir3);
 			if(!dir.exists()){
 				dir.mkdirs();
 			}
@@ -47,7 +51,7 @@ public class UploadController {
 			System.err.println(dir+"/"+image.getOriginalFilename());
 			image.transferTo(new File(dir,image.getOriginalFilename()));
 			UploadResponse<String> resp=new UploadResponse<String>(200, "success");
-			resp.setData(image.getOriginalFilename());
+			resp.setData(req.getContextPath()+"/"+dir1+"/"+dir2+"/"+image.getOriginalFilename());
 			return resp;
 		}
 		return new UploadResponse<String>(500,"error");

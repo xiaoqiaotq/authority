@@ -1,5 +1,9 @@
 package org.xiaoqiaotq.domain.test;
 
+import javax.persistence.Temporal;
+
+import org.hibernate.validator.constraints.Email;
+
 /**
  * @author xiaoqiaotq@gmail.com	
  * @date   2014年12月26日
@@ -7,6 +11,7 @@ package org.xiaoqiaotq.domain.test;
 public class UploadResponse<T> {
 	private int code;
 	private String message="success";
+	@Email
 	private T data;
 	public UploadResponse() {
 	}

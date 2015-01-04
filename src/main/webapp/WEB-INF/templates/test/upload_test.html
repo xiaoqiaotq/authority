@@ -31,7 +31,7 @@
 		        <button id="test" th:text="test"></button>
 		        
                 <div class="file-upload">
-                    <input type="file" data-name="photo" name="photo" id="fileUplaodPhoto" class="file" onchange="upload(this, '/zhipin/zhipin/index.php/resume/upload', 'fileUplaodPhoto')"  />
+                    <input 	="file" data-name="photo" name="photo" id="fileUplaodPhoto" class="file" onchange="upload(this, '/zhipin/zhipin/index.php/resume/upload', 'fileUplaodPhoto')"  />
                     <div class="real-img">
                         <img src="/zhipin/zhipin/static//resume/photo/2014/1226/14195733118533.jpg" alt="" title="" width="120" height="120"/>
                         <span>更换头像</span>
@@ -50,11 +50,6 @@
 			<script>
 			
 			    jQuery(document).ready(function () {
-					//	commons.msg({
-			        //            'title': '上传信息错误！',
-			        //            'content': 'aaaa',
-			        //             time: 0
-					//	})
 					$("#test").off("click").on("click",function(){
 				    	 $.ajaxFileUpload({
 				    	        fileElementId: 'image',
@@ -64,16 +59,11 @@
 				    	        //data: {rid: $('#fileUplaodPhoto').parents('.left').data('rid'), type: 'photo'},
 				    	        success: function(data) {
 				    	            if (data.code === 200) { 
-				    	            	alert(data);
 				    	                $('.real-img').find('img').attr('src', data.data);
-				    	            } else if (data.code === 500) {
-				    	                if (data.location) {
-				    	                    window.location.href = data.location;
-				    	                }
 				    	            } else {
-				    	                msg({
+				    	            	commons.msg({
 				    	                    'title': '上传信息错误！',
-				    	                    'content': data.error,
+				    	                    'content': data.message,
 				    	                    time: 1000
 				    	                });
 				    	            }
