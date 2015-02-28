@@ -1,7 +1,5 @@
 package org.xiaoqiaotq.domain.test;
 
-import javax.persistence.Temporal;
-
 import org.hibernate.validator.constraints.Email;
 
 /**
@@ -38,5 +36,4 @@ public class UploadResponse<T> {
 	public void setData(T data) {
 		this.data = data;
 	}
-	
 }
